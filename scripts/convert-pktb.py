@@ -16,6 +16,7 @@ def breakMorhemes(morphemes):
 
 IN_DIR = sys.argv[1]
 MORPH  = re.compile('(\S+/[^\s\)]+)')
+EMPTY  = re.compile('(\*(op|\?|T|pro)\*(-\d+)?)')
 
 for filename in glob.glob(os.path.join(IN_DIR, '*.fid')):
     fin   = open(filename)
@@ -37,4 +38,8 @@ for filename in glob.glob(os.path.join(IN_DIR, '*.fid')):
             for old in MORPH.findall(line):
                 new = breakMorhemes(old)
                 line = line.replace(old, new)
+            for old in EMPTY.findall(line):
+                new = '(-NONE- '+old[0]+')'
+                line = line.replace(old[0], new)
+
             parse.write(line)
